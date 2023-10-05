@@ -5,9 +5,9 @@
  *
  * @brief Opérateurs arithmétiques pour les matrices et les vecteurs.
  *
- * Nom:
- * Code permanent :
- * Email :
+ * Nom: Samuel Velasco
+ * Code permanent : VELS66050107
+ * Email : samuel.velasco.1@ens.etsmtl.ca
  *
  */
 
@@ -65,7 +65,15 @@ namespace gti320 {
 	Matrix<_Scalar, Rows, Cols> operator+(const Matrix<_Scalar, Rows, Cols, StorageA>& A, const Matrix<_Scalar, Rows, Cols, StorageB>& B)
 	{
 		// TODO : implémenter
-		return Matrix<_Scalar, Rows, Cols>();
+		assert(A.rows() == B.rows() && A.cols() == B.cols());
+		auto addedMatrix(_Scalar ,A.rows(), A.cols());
+
+		for (int i = 0; i < A.rows(); i++) {
+			for (int j = 0; j < A.cols(); j++) {
+				addedMatrix(i, j) = A(i, j) + B(i, j);
+			}
+		}
+		return addedMatrix;
 	}
 
 	/**
@@ -78,7 +86,15 @@ namespace gti320 {
 	Matrix<_Scalar, Dynamic, Dynamic> operator+(const Matrix<_Scalar, Dynamic, Dynamic, ColumnStorage>& A, const Matrix<_Scalar, Dynamic, Dynamic, ColumnStorage>& B)
 	{
 		// TODO : implémenter
-		return Matrix<_Scalar, Dynamic, Dynamic>();
+		assert(A.rows() == B.rows() && A.cols() == B.cols());
+		Matrix<_Scalar, Dynamic, Dynamic> addedMatrix(A.rows(), A.cols());
+
+		for (int i = 0; i < A.rows(); i++) {
+			for (int j = 0; j < A.cols(); j++) {
+				addedMatrix(i, j) = A(i, j) + B(i, j);
+			}
+		}
+		return addedMatrix;
 	}
 
 	/**
@@ -143,8 +159,15 @@ namespace gti320 {
 	template <typename _Scalar, int _Rows, int _Cols>
 	Matrix<_Scalar, _Rows, _Cols, ColumnStorage> operator*(const _Scalar& a, const Matrix<_Scalar, _Rows, _Cols, ColumnStorage>& A)
 	{
+		Matrix<_Scalar, Dynamic, Dynamic> matriceProduite(A.rows(), A.cols());
+
 		// TODO : implémenter
-		return Matrix<_Scalar, Dynamic, Dynamic>();
+		for (int i = 0; i < A.rows(); i++) {
+			for (int j = 0; j < A.cols(); j++) {
+				matriceProduite(i, j) = a*A(i, j);
+			}
+		}
+		return matriceProduite;
 	}
 
 	/**
