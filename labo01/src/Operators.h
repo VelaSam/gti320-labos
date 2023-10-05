@@ -25,8 +25,23 @@ namespace gti320 {
 	template <typename _Scalar, int RowsA, int ColsA, int StorageA, int RowsB, int ColsB, int StorageB>
 	Matrix<_Scalar, RowsA, ColsB> operator*(const Matrix<_Scalar, RowsA, ColsA, StorageA>& A, const Matrix<_Scalar, RowsB, ColsB, StorageB>& B)
 	{
+
 		// TODO implémenter
-		return Matrix<_Scalar, RowsA, ColsB>();
+		assert(A.cols() == B.rows());
+		Matrix<_Scalar, RowsA, ColsB> C(A.rows(), B.cols());
+
+		int iterations = A.cols(); // could also be B.rows()
+		for (int i = 0; i < C.rows(); i++) {
+			for (int j = 0; j < C.cols(); j++) {
+				int sumRowCol = 0;
+				// C(i,j) = row(A)*col(B)
+				for (int k = 0; k < iterations; k++) {
+					sumRowCol += A(i, k) * B(k, j);
+				}
+				C(i, j) = sumRowCol;
+			}
+		}
+		return C;
 	}
 
 	/**
