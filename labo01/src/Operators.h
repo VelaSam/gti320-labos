@@ -242,8 +242,15 @@ namespace gti320 {
 	template <typename _Scalar, int _Rows, int _Cols>
 	Matrix<_Scalar, _Rows, _Cols, RowStorage> operator*(const _Scalar& a, const Matrix<_Scalar, _Rows, _Cols, RowStorage>& A)
 	{
+		Matrix<_Scalar, Dynamic, Dynamic, RowStorage> matriceProduite(A.rows(), A.cols());
+
 		// TODO : implémenter
-		return Matrix<_Scalar, Dynamic, Dynamic, RowStorage>();
+		for (int i = 0; i < A.rows(); i++) {
+			for (int j = 0; j < A.cols(); j++) {
+				matriceProduite(i, j) = a * A(i, j);
+			}
+		}
+		return matriceProduite;
 	}
 
 	/**
@@ -255,8 +262,20 @@ namespace gti320 {
 	template <typename _Scalar, int _Rows, int _Cols>
 	Vector<_Scalar, _Rows> operator*(const Matrix<_Scalar, _Rows, _Cols, RowStorage>& A, const Vector<_Scalar, _Cols>& v)
 	{
+
 		// TODO : implémenter
-		return Vector<_Scalar, _Rows>();
+		assert(A.cols() == v.rows());
+		Vector<_Scalar, _Rows> multipliedVector(v.rows());
+
+		for (int i = 0; i < v.rows(); i++) {
+			_Scalar indexValue = 0;
+			for (int j = 0; j < A.rows(); j++) {
+				indexValue += A(i, j) * v(j);
+			}
+			multipliedVector(i) = indexValue;
+		}
+
+		return multipliedVector;
 	}
 
 	/**
@@ -269,7 +288,19 @@ namespace gti320 {
 	Vector<_Scalar, _Rows> operator*(const Matrix<_Scalar, _Rows, _Cols, ColumnStorage>& A, const Vector<_Scalar, _Cols>& v)
 	{
 		// TODO : implémenter
-		return Vector<_Scalar, _Rows>();
+		assert(A.cols() == v.rows());
+		Vector<_Scalar, _Rows> multipliedVector(v.rows());
+
+		for (int i = 0; i < v.rows(); i++) {
+			_Scalar indexValue = 0;
+			for (int j = 0; j < A.rows(); j++) {
+				indexValue += A(i, j) * v(j);
+			}
+			multipliedVector(i) = indexValue;
+		}
+
+		return multipliedVector;
+
 	}
 
 	/**
