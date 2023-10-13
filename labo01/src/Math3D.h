@@ -102,8 +102,22 @@ namespace gti320 {
 	Vector<_Scalar, 3> operator*(const Matrix<_Scalar, 4, 4, ColumnStorage>& A, const Vector<_Scalar, 3>& v)
 	{
 		// TODO : implémenter
-		return Vector<_Scalar, 3>(); // pas bon, à changer
-	}
+		Matrix<_Scalar, 4, 1> fourByOneMat();
+
+		for (int i = 0; i < v.rows(); i++) {
+			fourByOneMat(i,0) = v(i)
+		}
+		fourByOneMat(3, 0) = 1;
+
+		auto matrixVec = A * fourByOneMat;
+
+		Vector<_Scalar, 3> returnVector();
+
+		for (int i = 0; i < returnVector.rows(); i++) {
+			returnVector(i) = matrixVec(i, 0);
+		}
+		
+		return returnVector;
 
 
 	/**
@@ -116,8 +130,28 @@ namespace gti320 {
 	static Matrix<_Scalar, 3, 3> makeRotation(_Scalar x, _Scalar y, _Scalar z)
 	{
 		// TODO : implémenter
+		_Scalar sinTht = sin(x);
+		_Scalar cosTht = cos(x);
+		_Scalar sinPhi = sin(y);
+		_Scalar cosPhi = cos(y);
+		_Scalar sinPsi = sin(z);
+		_Scalar cosPsi = cos(z);
 
-		return Matrix<_Scalar, 3, 3>(); //	 pas bon, à changer
+		Matrix<_Scalar, 3, 3> eulerMatrix();
+
+		eulerMatrix(0, 0) = cosPhi * cosPsi;
+		eulerMatrix(0, 1) = sinTht * sinPhi * cosPsi - cosTht * sinPsi;
+		eulerMatrix(0, 2) = cosTht * sinPhi * cosPsi + sinTht * sinPsi;
+		
+		eulerMatrix(1, 0) = cosPhi * sinPsi;
+		eulerMatrix(1, 1) = sinTht * sinPhi * sinPsi + cosTht * cosPsi;
+		eulerMatrix(1, 2) = cosTht * sinPhi * sinPsi - sinTht * cosPsi;
+
+		eulerMatrix(2, 0) = -1 * sinPhi;
+		eulerMatrix(2, 1) = sinTht * cosPhi;
+		eulerMatrix(2, 2) = cosTht * cosPhi;
+
+		return eulerMatrix; //	 pas bon, à changer
 	}
 
 }
