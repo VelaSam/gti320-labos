@@ -168,13 +168,14 @@ namespace gti320 {
 	{
 		// TODO : implémenter
 		assert(A.rows() == B.rows() && A.cols() == B.cols());
-		auto addedMatrix(_Scalar, A.rows(), A.cols());
+		auto subtractedMatrix(_Scalar, A.rows(), A.cols());
 
 		for (int i = 0; i < A.rows(); i++) {
 			for (int j = 0; j < A.cols(); j++) {
-				addedMatrix(i, j) = A(i, j) - B(i, j);
+				subtractedMatrix(i, j) = A(i, j) - B(i, j);
 			}
 		}
+		return subtractedMatrix;
 	}
 
 
@@ -190,13 +191,14 @@ namespace gti320 {
 	{
 		// TODO : implémenter
 		assert(A.rows() == B.rows() && A.cols() == B.cols());
-		auto addedMatrix(_Scalar, Dynamic, Dynamic);
+		auto subtractedMatrix(_Scalar, Dynamic, Dynamic);
 
 		for (int i = 0; i < A.rows(); i++) {
 			for (int j = 0; j < A.cols(); j++) {
-				addedMatrix(i, j) = A(i, j) - B(i, j);
+				subtractedMatrix(i, j) = A(i, j) - B(i, j);
 			}
 		}
+		return subtractedMatrix;
 	}
 
 	/**
@@ -209,7 +211,15 @@ namespace gti320 {
 	Matrix<_Scalar, Dynamic, Dynamic> operator-(const Matrix<_Scalar, Dynamic, Dynamic, RowStorage>& A, const Matrix<_Scalar, Dynamic, Dynamic, RowStorage>& B)
 	{
 		// TODO : implémenter
-		return Matrix<_Scalar, Dynamic, Dynamic, RowStorage>();
+		assert(A.rows() == B.rows() && A.cols() == B.cols());
+		auto subtractedMatrix(_Scalar, Dynamic, Dynamic);
+
+		for (int i = 0; i < A.rows(); i++) {
+			for (int j = 0; j < A.cols(); j++) {
+				subtractedMatrix(i, j) = A(i, j) - B(i, j);
+			}
+		}
+		return subtractedMatrix;
 	}
 
 
@@ -310,7 +320,14 @@ namespace gti320 {
 	Vector<_Scalar, _Rows> operator*(const _Scalar& a, const Vector<_Scalar, _Rows>& v)
 	{
 		// TODO : implémenter
-		return Vector<_Scalar, _Rows>();
+		Vector<_Scalar, _Rows> vecteurMultiplie(v.rows());
+
+		for (int i = 0; i < vecteurMultiplie.rows(); i++)
+		{
+			vecteurMultiplie(i) = v(i) * a;
+		} 
+
+		return vecteurMultiplie;
 	}
 
 
@@ -320,8 +337,17 @@ namespace gti320 {
 	template <typename _Scalar, int _RowsA, int _RowsB>
 	Vector<_Scalar, _RowsA> operator+(const Vector<_Scalar, _RowsA>& a, const Vector<_Scalar, _RowsB>& b)
 	{
+
 		// TODO : implémenter
-		return Vector<_Scalar, _RowsA>();
+		assert(a.rows() == b.rows());
+		Vector<_Scalar, _RowsA> addedVector(a.rows());
+
+		for (int i = 0; i < addedVector.rows(); i++)
+		{
+			addedVector(i) = a(i) + b(i);
+		}
+
+		return addedVector;
 	}
 
 	/**
@@ -331,7 +357,15 @@ namespace gti320 {
 	Vector<_Scalar, _RowsA> operator-(const Vector<_Scalar, _RowsA>& a, const Vector<_Scalar, _RowsB>& b)
 	{
 		// TODO : implémenter
-		return Vector<_Scalar, _RowsA>();
+		assert(a.rows() == b.rows());
+		Vector<_Scalar, _RowsA> subtractedVector(a.rows());
+
+		for (int i = 0; i < subtractedVector.rows(); i++)
+		{
+			subtractedVector(i) = a(i) - b(i);
+		}
+
+		return subtractedVector;
 	}
 
 

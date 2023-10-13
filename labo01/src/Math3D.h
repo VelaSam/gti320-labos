@@ -7,9 +7,9 @@
  * rotation, des matrices de transformations en coordonnées homogènes et les
  * vecteurs 3D.
  *
- * Nom:
- * Code permanent :
- * Email :
+ * Nom: Samuel Velasco
+ * Code permanent : VELS66050107
+ * Email :  samuel.velasco.1@ens.etsmtl.ca
  *
  */
 
@@ -56,7 +56,29 @@ namespace gti320 {
 	inline Matrix4d Matrix4d::inverse() const
 	{
 		// TODO : implémenter
-		return Matrix4d(); // Pas bon, à changer
+		SubMatrix<double, 4, 4, ColumnStorage> R = (*this).block(0, 0, 3, 3);
+		Matrix<double, 3, 3, RowStorage> transposedR = R.transpose<double, 3, 3, RowStorage>();
+		Matrix<double, 4, 4, ColumnStorage> matrix4d();
+		Vector<double, 3> t(3);
+
+		for (int i = 0; i < t.cols(); i++)
+		{
+			t(i) = (*this)(i, this->rows()-1);
+		}
+
+		Vector<double, 3> mRt = -1.0 * (transposedR * t);
+		Matrix4d newMatrix(this->rows(), this->cols());
+
+		for (int i = 0; i < transposedR.rows(); i++)
+		{
+			for (int j = 0; j < transposedR.cols(); j++)
+			{
+				newMatrix(i, j) = transposedR(i,j);
+			}
+			newMatrix(i, this->cols()-1) = mRt(i);
+		}
+
+		return newMatrix;
 	}
 
 	/**
@@ -68,7 +90,7 @@ namespace gti320 {
 	inline Matrix3d Matrix3d::inverse() const
 	{
 		// TODO : implémenter
-		return Matrix3d();
+		return this->transpose<ColumnStorage>();
 	}
 
 
