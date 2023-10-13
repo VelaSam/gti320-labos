@@ -31,8 +31,8 @@ namespace gti320 {
 		Matrix<_Scalar, RowsA, ColsB> C(A.rows(), B.cols());
 
 		int iterations = A.cols(); // could also be B.rows()
-		for (int i = 0; i < C.rows(); i++) {
-			for (int j = 0; j < C.cols(); j++) {
+		for (int j = 0; j < C.cols(); j++) {
+			for (int i = 0; i < C.rows(); i++) {
 				_Scalar sumRowCol = 0;
 				for (int k = 0; k < iterations; k++) {
 					sumRowCol += A(i, k) * B(k, j);
@@ -58,8 +58,8 @@ namespace gti320 {
 		Matrix<_Scalar, Dynamic, Dynamic> C(A.rows(), B.cols());
 
 		int iterations = A.cols(); // could also be B.rows()
-		for (int i = 0; i < C.rows(); i++) {
-			for (int j = 0; j < C.cols(); j++) {
+		for (int j = 0; j < C.cols(); j++) {
+			for (int i = 0; i < C.rows(); i++) {
 				_Scalar sumRowCol = 0;
 				for (int k = 0; k < iterations; k++) {
 					sumRowCol += A(i, k) * B(k, j);
@@ -85,8 +85,8 @@ namespace gti320 {
 		Matrix<_Scalar, Dynamic, Dynamic> C(A.rows(), B.cols());
 
 		int iterations = A.cols(); // could also be B.rows()
-		for (int i = 0; i < C.rows(); i++) {
-			for (int j = 0; j < C.cols(); j++) {
+		for (int j = 0; j < C.cols(); j++) {
+			for (int i = 0; i < C.rows(); i++) {
 				_Scalar sumRowCol = 0;
 				for (int k = 0; k < iterations; k++) {
 					sumRowCol += A(i, k) * B(k, j);
@@ -106,10 +106,10 @@ namespace gti320 {
 	{
 		// TODO : implémenter
 		assert(A.rows() == B.rows() && A.cols() == B.cols());
-		auto addedMatrix(_Scalar ,A.rows(), A.cols());
+		auto addedMatrix(_Scalar, A.rows(), A.cols());
 
-		for (int i = 0; i < A.rows(); i++) {
-			for (int j = 0; j < A.cols(); j++) {
+		for (int j = 0; j < A.cols(); j++) {
+			for (int i = 0; i < A.rows(); i++) {
 				addedMatrix(i, j) = A(i, j) + B(i, j);
 			}
 		}
@@ -129,8 +129,8 @@ namespace gti320 {
 		assert(A.rows() == B.rows() && A.cols() == B.cols());
 		Matrix<_Scalar, Dynamic, Dynamic> addedMatrix(A.rows(), A.cols());
 
-		for (int i = 0; i < A.rows(); i++) {
-			for (int j = 0; j < A.cols(); j++) {
+		for (int j = 0; j < A.cols(); j++) {
+			for (int i = 0; i < A.rows(); i++) {
 				addedMatrix(i, j) = A(i, j) + B(i, j);
 			}
 		}
@@ -148,7 +148,7 @@ namespace gti320 {
 	{
 		// TODO : implémenter
 		assert(A.rows() == B.rows() && A.cols() == B.cols());
-		Matrix<_Scalar,Dynamic,Dynamic,RowStorage> addedMatrix(A.rows(), A.cols());
+		Matrix<_Scalar, Dynamic, Dynamic, RowStorage> addedMatrix(A.rows(), A.cols());
 
 		for (int i = 0; i < A.rows(); i++) {
 			for (int j = 0; j < A.cols(); j++) {
@@ -156,7 +156,7 @@ namespace gti320 {
 			}
 		}
 		return addedMatrix;
-		
+
 	}
 
 
@@ -170,8 +170,8 @@ namespace gti320 {
 		assert(A.rows() == B.rows() && A.cols() == B.cols());
 		auto subtractedMatrix(_Scalar, A.rows(), A.cols());
 
-		for (int i = 0; i < A.rows(); i++) {
-			for (int j = 0; j < A.cols(); j++) {
+		for (int j = 0; j < A.cols(); j++) {
+			for (int i = 0; i < A.rows(); i++) {
 				subtractedMatrix(i, j) = A(i, j) - B(i, j);
 			}
 		}
@@ -193,8 +193,8 @@ namespace gti320 {
 		assert(A.rows() == B.rows() && A.cols() == B.cols());
 		auto subtractedMatrix(_Scalar, Dynamic, Dynamic);
 
-		for (int i = 0; i < A.rows(); i++) {
-			for (int j = 0; j < A.cols(); j++) {
+		for (int j = 0; j < A.cols(); j++) {
+			for (int i = 0; i < A.rows(); i++) {
 				subtractedMatrix(i, j) = A(i, j) - B(i, j);
 			}
 		}
@@ -237,7 +237,7 @@ namespace gti320 {
 		// TODO : implémenter
 		for (int i = 0; i < A.rows(); i++) {
 			for (int j = 0; j < A.cols(); j++) {
-				matriceProduite(i, j) = a*A(i, j);
+				matriceProduite(i, j) = a * A(i, j);
 			}
 		}
 		return matriceProduite;
@@ -325,7 +325,7 @@ namespace gti320 {
 		for (int i = 0; i < vecteurMultiplie.rows(); i++)
 		{
 			vecteurMultiplie(i) = v(i) * a;
-		} 
+		}
 
 		return vecteurMultiplie;
 	}
