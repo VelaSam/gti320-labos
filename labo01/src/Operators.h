@@ -195,7 +195,9 @@ namespace gti320 {
 	{
 		// TODO : implémenter
 		assert(A.rows() == B.rows() && A.cols() == B.cols());
-		auto subtractedMatrix(_Scalar, Dynamic, Dynamic);
+
+		Matrix<_Scalar, Dynamic, Dynamic> subtractedMatrix(A.rows(), A.cols());
+
 
 		for (int j = 0; j < A.cols(); j++) {
 			for (int i = 0; i < A.rows(); i++) {
@@ -216,7 +218,7 @@ namespace gti320 {
 	{
 		// TODO : implémenter
 		assert(A.rows() == B.rows() && A.cols() == B.cols());
-		auto subtractedMatrix(_Scalar, Dynamic, Dynamic);
+		Matrix<_Scalar, Dynamic, Dynamic> subtractedMatrix(A.rows(), A.cols());
 
 		for (int i = 0; i < A.rows(); i++) {
 			for (int j = 0; j < A.cols(); j++) {
