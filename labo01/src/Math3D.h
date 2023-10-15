@@ -66,7 +66,7 @@ namespace gti320 {
 		}
 		Vector<double, 3> mRt = -1.0 * (transposedR * t);
 		Matrix4d newMatrix(this->rows(), this->cols());
-		newMatrix(3, 3) = 1;
+		newMatrix.setIdentity();
 
 		for (int i = 0; i < transposedR.rows(); i++)
 		{

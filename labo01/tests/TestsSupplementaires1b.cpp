@@ -20,7 +20,6 @@ using namespace gti320;
 // TODO vos propres tests ici
 
 
- //TEST 1 Addition de matrices generique
 TEST(TestSupLabo1b, OperatorAddDeath) {
 
 	Matrix<int, Dynamic, Dynamic>matrix1(4, 3);
@@ -31,40 +30,13 @@ TEST(TestSupLabo1b, OperatorAddDeath) {
 	EXPECT_DEBUG_DEATH({ returnMatrix = matrix1 + matrix2; }, "");
 }
 
-TEST(TestSupLabo1b, OperatorAddGoodCase) {
-	int rows = 5;
-	int cols = 6;
+ //TEST 1 Addition de matrices generique
+TEST(TestSupLabo1b, OperatorAddGoodGeneric) {
+	const int rows = 5;
+	const int cols = 6;
 
-	Matrix<int, Dynamic, Dynamic>matrix1(rows, cols);
-	Matrix<int, Dynamic, Dynamic>matrix2(rows, cols);
-
-
-	int numberInMatrix1 = 8, numberInMatrix2 = 2;
-
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
-			matrix1(i, j) = numberInMatrix1;
-			matrix2(i, j) = numberInMatrix2;
-		}
-	}
-
-	Matrix<int, Dynamic, Dynamic> addedMatrix;
-	addedMatrix = (matrix1 + matrix2);
-
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
-			EXPECT_EQ(addedMatrix(i, j), numberInMatrix1 + numberInMatrix2);
-		}
-	}
-
-}
-
-TEST(TestSupLabo1b, OperatorAddStaticGoodCase) {
-	int rows = 5;
-	int cols = 6;
-
-	Matrix<int>matrix1(rows, cols);
-	Matrix<int>matrix2(rows, cols);
+	Matrix<int, rows, cols>matrix1(rows, cols);
+	Matrix<int, rows, cols>matrix2(rows, cols);
 
 
 	int numberInMatrix1 = 8, numberInMatrix2 = 2;
@@ -76,15 +48,37 @@ TEST(TestSupLabo1b, OperatorAddStaticGoodCase) {
 		}
 	}
 
-	Matrix<int> addedMatrix;
-	addedMatrix = (matrix1 + matrix2);
+	Matrix<int, rows, cols> addedMatrix = matrix1 + matrix2;
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			EXPECT_EQ(addedMatrix(i, j), numberInMatrix1 + numberInMatrix2);
 		}
 	}
+
 }
+
+TEST(TestSupLabo1b, SubtractOperator) {
+	Matrix<double, 2, 2> A;
+	A(0, 0) = 1.0;
+	A(0, 1) = 2.0;
+	A(1, 0) = 3.0;
+	A(1, 1) = 4.0;
+
+	Matrix<double, 2, 2> B;
+	B(0, 0) = 0.5;
+	B(0, 1) = 1.0;
+	B(1, 0) = 1.5;
+	B(1, 1) = 2.0;
+
+	Matrix<double, 2, 2> result = A - B;
+
+	EXPECT_EQ(result(0, 0), 0.5);
+	EXPECT_EQ(result(0, 1), 1.0);
+	EXPECT_EQ(result(1, 0), 1.5);
+	EXPECT_EQ(result(1, 1), 2.0);
+}
+
 
 
 // TEST 2

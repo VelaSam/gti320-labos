@@ -106,13 +106,15 @@ namespace gti320 {
 	{
 		// TODO : implémenter
 		assert(A.rows() == B.rows() && A.cols() == B.cols());
-		auto addedMatrix(_Scalar, A.rows(), A.cols());
+
+		Matrix<_Scalar, Rows, Cols> addedMatrix;
 
 		for (int j = 0; j < A.cols(); j++) {
 			for (int i = 0; i < A.rows(); i++) {
 				addedMatrix(i, j) = A(i, j) + B(i, j);
 			}
 		}
+
 		return addedMatrix;
 	}
 
@@ -168,13 +170,15 @@ namespace gti320 {
 	{
 		// TODO : implémenter
 		assert(A.rows() == B.rows() && A.cols() == B.cols());
-		auto subtractedMatrix(_Scalar, A.rows(), A.cols());
+
+		Matrix<_Scalar, Rows, Cols> subtractedMatrix;
 
 		for (int j = 0; j < A.cols(); j++) {
 			for (int i = 0; i < A.rows(); i++) {
 				subtractedMatrix(i, j) = A(i, j) - B(i, j);
 			}
 		}
+
 		return subtractedMatrix;
 	}
 
@@ -302,7 +306,7 @@ namespace gti320 {
 		Vector<_Scalar, _Rows> multipliedVector(v.rows());
 		multipliedVector.setZero();
 		for (int j = 0; j < A.cols(); j++) {
-			for (int i = 0; i < multipliedVector.rows();i++) {
+			for (int i = 0; i < multipliedVector.rows(); i++) {
 				multipliedVector(i) += (A(i, j) * v(j));
 			}
 		}
