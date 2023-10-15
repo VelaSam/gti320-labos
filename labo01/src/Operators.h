@@ -300,17 +300,14 @@ namespace gti320 {
 		// TODO : implémenter
 		assert(A.cols() == v.rows());
 		Vector<_Scalar, _Rows> multipliedVector(v.rows());
-
-		for (int i = 0; i < v.rows(); i++) {
-			_Scalar indexValue = 0;
-			for (int j = 0; j < A.rows(); j++) {
-				indexValue += A(i, j) * v(j);
+		multipliedVector.setZero();
+		for (int j = 0; j < A.cols(); j++) {
+			for (int i = 0; i < multipliedVector.rows();i++) {
+				multipliedVector(i) += (A(i, j) * v(j));
 			}
-			multipliedVector(i) = indexValue;
 		}
 
 		return multipliedVector;
-
 	}
 
 	/**

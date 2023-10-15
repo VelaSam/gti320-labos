@@ -59,17 +59,14 @@ namespace gti320 {
 		// TODO : implémenter
 		SubMatrix<double, 4, 4, ColumnStorage> R = (*this).block(0, 0, 3, 3);
 		Matrix<double, 3, 3, RowStorage> transposedR = R.transpose<double, 3, 3, RowStorage>();
-
 		Vector<double, 3> t;
 		for (int i = 0; i < t.rows(); i++)
 		{
 			t(i) = (*this)(i, this->rows()-1);
 		}
-
-
 		Vector<double, 3> mRt = -1.0 * (transposedR * t);
-
 		Matrix4d newMatrix(this->rows(), this->cols());
+		newMatrix(3, 3) = 1;
 
 		for (int i = 0; i < transposedR.rows(); i++)
 		{
