@@ -5,9 +5,9 @@
  *
  * @brief Algorithme glouton pour la coloration de graphe.
  *
- * Nom:
- * Code permanent :
- * Email :
+ * Nom: Samuel Velasco
+ * Code permanent : VELS66050107
+ * Email : samuel.velasco.1@ens.etsmtl.ca
  *
  */
 

@@ -3,9 +3,9 @@
  *
  * @brief Tests unitaires supplémentaires de la partie 1b
  *
- * Nom:
- * Code permanent :
- * Email :
+ * Nom: Samuel Velasco
+ * Code permanent : VELS66050107
+ * Email : samuel.velasco.1@ens.etsmtl.ca
  *
  */
 
