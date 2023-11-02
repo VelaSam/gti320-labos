@@ -29,7 +29,7 @@ namespace gti320
         Vector2f x;     // position
         Vector2f v;     // vélocité
         Vector2f f;     // force
-        int color;      // coleur de particule
+        int color;      // couleur de particule
 
         Particle(const Vector2f& _x, const Vector2f& _v, const Vector2f& _f, float _m)
             : fixed(false), m(_m), x(_x), v(_v), f(_f), color(-1)
@@ -51,8 +51,8 @@ namespace gti320
     public:
         int index0;     // indice de la particule 0
         int index1;     // indice de la particule 1
-        float k;       // rigidité
-        float l0;      // longueur au repos
+        float k;        // rigidité
+        float l0;       // longueur au repos
 
         Spring(int _index0, int _index1, float _k, float _l0)
             : index0(_index0), index1(_index1), k(_k), l0(_l0)
@@ -85,8 +85,7 @@ namespace gti320
          * Ajoute une particule au système. La particule est copiée dans le tableau
          * m_particles.
          */
-        void addParticle(const Particle& _particle)
-        {
+        void addParticle(const Particle& _particle) {
             m_particles.push_back(_particle);
         }
 
@@ -94,7 +93,9 @@ namespace gti320
          * Ajoute un ressort au système. Le ressort est copié dans le tableau
          * m_springs.
          */
-        void addSpring(const Spring& _spring) { m_springs.push_back(_spring); }
+        void addSpring(const Spring& _spring) { 
+            m_springs.push_back(_spring);
+        }
 
         /**
          * Calcul des forces exercées sur chacune des particules.
