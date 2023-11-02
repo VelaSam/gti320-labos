@@ -13,16 +13,12 @@ void ParticleSystem::computeForces()
     // TODO 
     //
     // Calcul de la force gravitationnelle sur chacune des particules
-   
     double forceX = 0.0;
     double forceY = 0.0;
 
     for (Particle& p : m_particles)
     {
-
         forceY += p.m * -9.81;
-     
-
     }
 
     // TODO
@@ -33,10 +29,10 @@ void ParticleSystem::computeForces()
     // m_particles[s.index1]. On rappelle que les deux forces sont de même
     // magnitude mais dans des directions opposées.
 
-  /*  for (const Spring& s : m_springs)
+    for (const Spring& s : m_springs)
     {
-        s.index0 
-    }*/
+    }
+
 }
 
 /**
