@@ -238,7 +238,7 @@ namespace gti320
 		{
 			// TODO implementer
 			assert(i > -1 && i < this->rows() && j > -1 && j < this->cols());
-			return (_Scalar)this->data()[(i)*this->cols() + (j)];
+			return this->m_storage.data()[(i)*this->cols() + (j)];
 		}
 
 		/**
