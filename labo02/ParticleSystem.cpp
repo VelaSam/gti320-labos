@@ -1,5 +1,7 @@
 #include "ParticleSystem.h"
 
+#define GRAVITY_A (-1*9.81)
+
 using namespace gti320;
 
 /**
@@ -13,12 +15,11 @@ void ParticleSystem::computeForces()
     // TODO 
     //
     // Calcul de la force gravitationnelle sur chacune des particules
-    double forceX = 0.0;
-    double forceY = 0.0;
+
 
     for (Particle& p : m_particles)
     {
-        forceY += p.m * -9.81;
+        p.f(1) = (float)(p.m * GRAVITY_A);
     }
 
     // TODO
@@ -28,18 +29,29 @@ void ParticleSystem::computeForces()
     // auxquelles le ressort est attaché sont m_particles[s.index0] et
     // m_particles[s.index1]. On rappelle que les deux forces sont de même
     // magnitude mais dans des directions opposées.
-
     for (const Spring& s : m_springs)
     {
-    }
+        auto particule0 = this->m_particles[s.index0];
+        auto particule1 = this->m_particles[s.index1];
+        auto variationPosition = particule1.x - particule0.x;
 
+        auto alpha0 = s.k * (1 - s.l0/variationPosition.norm());
+        auto alpha1 = -1* s.k * (1 - s.l0/variationPosition.norm());
+
+        auto f0 = alpha0*variationPosition;
+        auto f1 = alpha1*variationPosition;
+
+        particule0.f = f0 + particule0.f;
+        particule1.f = f1 + particule1.f;
+    }
 }
 
 /**
  * Assemble les données du système dans les vecteurs trois vecteurs d'état _pos,
  * _vel et _force.
  */
-void ParticleSystem::pack(Vector<float, Dynamic>& _pos,
+void ParticleSystem::pack(
+    Vector<float, Dynamic>& _pos,
     Vector<float, Dynamic>& _vel,
     Vector<float, Dynamic>& _force)
 {
