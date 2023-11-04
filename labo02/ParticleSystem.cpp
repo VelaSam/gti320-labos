@@ -62,6 +62,30 @@ void ParticleSystem::pack(
     // taille. Rappel : la taille de ces vecteurs doit être 2 fois le nombre de
     // particules.
 
+    if (this->m_particles.size() != _vel.size() &&
+        this->m_particles.size() != _force.size() &&
+        this->m_particles.size() != _pos.size()) {
+
+        _pos.resize((int)this->m_particles.size()*2);
+        _vel.resize((int)this->m_particles.size()*2);
+        _force.resize((int)this->m_particles.size()*2);
+    }
+
+    for(int i = 0; i < this->m_particles.size()/2; i+=2){
+
+        _pos(i) = m_particles[i].x(0);
+        _pos(i + 1) = m_particles[i].x(1);
+
+        _vel(i) = m_particles[i].v(0);
+        _vel(i + 1) = m_particles[i].v(1);
+
+        _force(i) = m_particles[i].f(0);
+        _force(i + 1) = m_particles[i].f(1);
+    }
+
+
+
+
 }
 
 /**
