@@ -55,44 +55,41 @@ void ParticleSystem::pack(
     Vector<float, Dynamic>& _vel,
     Vector<float, Dynamic>& _force)
 {
-    // TODO 
-    //
-    // Copier les données des particules dans les vecteurs. Attention, si on a
-    // changé de modèle, il est possible que les vecteurs n'aient pas la bonne
-    // taille. Rappel : la taille de ces vecteurs doit être 2 fois le nombre de
-    // particules.
+    /* TODO: Copier les données des particules dans les vecteurs. Attention, si on a
+     * changé de modèle, il est possible que les vecteurs n'aient pas la bonne
+     taille. Rappel : la taille de ces vecteurs doit être 2 fois le nombre de
+     particules. */
 
-    if (this->m_particles.size() != _vel.size() &&
-        this->m_particles.size() != _force.size() &&
-        this->m_particles.size() != _pos.size()) {
-
+    if(this->getParticles().size() != 2*_pos.size()){
         _pos.resize((int)this->m_particles.size()*2);
+    }
+    if( this->getParticles().size() != 2*_vel.size()){
         _vel.resize((int)this->m_particles.size()*2);
+    }
+    if(this->getParticles().size() != 2*_force.size()){
         _force.resize((int)this->m_particles.size()*2);
     }
 
-    for(int i = 0; i < this->m_particles.size()/2; i+=2){
+    int index = 0;
+    for(auto & m_particle : this->m_particles) {
+        _pos(index) = m_particle.x(0);
+        _pos(index+1) = m_particle.x(1);
 
-        _pos(i) = m_particles[i].x(0);
-        _pos(i + 1) = m_particles[i].x(1);
+        _vel(index) = m_particle.v(0);
+        _vel(index+1) = m_particle.v(1);
 
-        _vel(i) = m_particles[i].v(0);
-        _vel(i + 1) = m_particles[i].v(1);
-
-        _force(i) = m_particles[i].f(0);
-        _force(i + 1) = m_particles[i].f(1);
+        _force(index) = m_particle.f(0);
+        _force(index+1) = m_particle.f(1);
+        index += 2;
     }
-
-
-
-
 }
 
 /**
  * Copie les données des vecteurs d'états dans le particules du système.
  */
-void ParticleSystem::unpack(const Vector<float, Dynamic>& _pos,
-    const Vector<float, Dynamic>& _vel)
+void ParticleSystem::unpack(
+        const Vector<float, Dynamic>& _pos,
+        const Vector<float, Dynamic>& _vel)
 {
     // TODO 
     //
@@ -100,6 +97,15 @@ void ParticleSystem::unpack(const Vector<float, Dynamic>& _pos,
     // contenues dans le vecteur d'état.
     //
 
+    // a re-verifier
+    for(int i = 0; i < this->m_particles.size()/2; i+=2){
+
+        m_particles[i].x(0) = _pos(i);
+        m_particles[i].x(1) =  _pos(i + 1);
+
+        m_particles[i].v(0) = _vel(i);
+        m_particles[i].v(1) = _vel(i + 1);
+    }
 }
 
 

@@ -225,7 +225,49 @@ namespace
 
         // TODO Amusez-vous. Rendu ici, vous le méritez.
 
+        const int N = 20;
+        int x_start = 100;
+        const int dx = 12;
+
+        int index = 0;
+        for (int j = 0; j < N; ++j)
+        {
+            const int x = x_start + j * dx;
+            const int y = 480;
+
+            Particle particle(Vector2f(x, y), Vector2f(0, 0), Vector2f(0, 0), 1.0);
+            particle.fixed = (index == 0) || (index == N - 1);
+            particleSystem.addParticle(particle);
+            if (j > 0)
+            {
+                Spring s(index - 1, index, k, (float)dx);
+                particleSystem.addSpring(s);
+            }
+            ++index;
+        }
+
+        x_start = 500;
+
+        index = 0;
+        for (int j = 0; j < N; ++j)
+        {
+            const int x = x_start + j * dx;
+            const int y = 480;
+
+            Particle particle(Vector2f(x, y), Vector2f(0, 0), Vector2f(0, 0), 1.0);
+            particle.fixed = (index == 0) || (index == N - 1);
+            particleSystem.addParticle(particle);
+            if (j > 0)
+            {
+                Spring s(index - 1, index, k, (float)dx);
+                particleSystem.addSpring(s);
+            }
+            ++index;
+        }
+
     }
+
+
 
 
 }

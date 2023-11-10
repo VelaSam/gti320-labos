@@ -15,7 +15,7 @@ int main(int argc, char** argv)
 {
   // Executer tous les tests unitaires.
   // 
-  // Les tests sont écrites dans les fichiers:
+  // Les tests sont ï¿½crites dans les fichiers:
   //   tests/Tests1a.cpp
   //   tests/Tests1b.cpp
   //   tests/TestsSupplementaire1a.cpp
@@ -23,12 +23,14 @@ int main(int argc, char** argv)
   //
   ::testing::InitGoogleTest(&argc, argv);
 
-  //::testing::GTEST_FLAG(filter) = "TestLabo1a.StaticVectorAccess";
-  //::testing::GTEST_FLAG(filter) = "TestLabo1a.*ElementAccess";
-  //::testing::GTEST_FLAG(filter) = "TestLabo1a.*";
-  ::testing::GTEST_FLAG(filter) = "TestLabo1b.*";
-  //::testing::GTEST_FLAG(filter) = "TestSupLabo1a.*";
-  //::testing::GTEST_FLAG(filter) = "TestSupLabo1b.*";
+//  ::testing::GTEST_FLAG(filter) = "TestLabo1a.StaticVectorAccess";
+//  ::testing::GTEST_FLAG(filter) = "TestLabo1a.*ElementAccess";
+//  ::testing::GTEST_FLAG(filter) = "TestLabo1a.*";
+//  ::testing::GTEST_FLAG(filter) = "TestLabo1b.*";
+//  ::testing::GTEST_FLAG(filter) = "TestSupLabo1a.*";
+//  ::testing::GTEST_FLAG(filter) = "TestSupLabo1b.*";
+  ::testing::GTEST_FLAG(filter) = "TestLabo2a.*";
+
 
   const int ret = RUN_ALL_TESTS();
 
