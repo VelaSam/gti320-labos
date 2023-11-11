@@ -19,8 +19,16 @@
 
 using namespace gti320;
 
-
 namespace Lab2Tests {
+
+    void printMatrix(Matrix<float, Dynamic, Dynamic> m){
+        for (int i = 0; i < m.rows(); ++i) {
+            for (int j = 0; j < m.cols(); ++j) {
+                std::cout << m(i, j) << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
 
     void printParticleSystem(const ParticleSystem& particleSystem){
 
@@ -35,6 +43,7 @@ namespace Lab2Tests {
         }
         std::cout << std::endl;
     }
+
 
     ParticleSystem &setUpTestSystem() {
 
@@ -67,7 +76,6 @@ namespace Lab2Tests {
     TEST(TestLabo2a, PackMethod){
 
         ParticleSystem particleSystem = setUpTestSystem();
-        printParticleSystem(particleSystem);
 
         ASSERT_EQ(particleSystem.getParticles().size(), 3);
 
@@ -119,55 +127,68 @@ namespace Lab2Tests {
 
     TEST(TestLabo2a, UnpackMethod){
 
-        ParticleSystem particleSystem = setUpTestSystem();
+//        Vector<float, Dynamic> pos(10);
+//        Vector<float, Dynamic> vel(10);
+//        for (int i = 0; i < pos.size(); ++i) {
+//            if(i%2==0){
+//                pos(i) = 50.0;
+//                vel(i) = 100.0;
+//            } else {
+//                pos(i) = 80.0;
+//                vel(i) = 200.0;
+//            }
+//
+//        }
+//        auto particleSystem = setUpTestSystem();
+//
+//        printParticleSystem(particleSystem);
+//
+//         particleSystem.unpack(pos, vel);
+//
+//        ASSERT_EQ(particleSystem.getParticles().size(), 10);
+//
+//        ASSERT_EQ(particleSystem.getParticles().at(0).x(0), 50);
+//        ASSERT_EQ(particleSystem.getParticles().at(0).x(1), 80);
+//
+//        ASSERT_EQ(particleSystem.getParticles().at(5).x(0), 50);
+//        ASSERT_EQ(particleSystem.getParticles().at(5).x(1), 80);
+//
+//        ASSERT_EQ(particleSystem.getParticles().at(10).x(0), 50);
+//        ASSERT_EQ(particleSystem.getParticles().at(10).x(1), 80);
+//
+//        ASSERT_EQ(particleSystem.getParticles().size(), 10);
+//
+//        ASSERT_EQ(particleSystem.getParticles().at(0).v(0), 100);
+//        ASSERT_EQ(particleSystem.getParticles().at(0).v(1), 200);
+//
+//        ASSERT_EQ(particleSystem.getParticles().at(5).v(0), 100);
+//        ASSERT_EQ(particleSystem.getParticles().at(5).v(1), 200);
+//
+//        ASSERT_EQ(particleSystem.getParticles().at(10).v(0), 100);
+//        ASSERT_EQ(particleSystem.getParticles().at(10).v(1), 200);
+
+
+    }
+
+    TEST(TestLabo2a, BuildMassMatrix){
+
+        auto particleSystem = setUpTestSystem();
+
         printParticleSystem(particleSystem);
 
-        ASSERT_EQ(particleSystem.getParticles().size(), 3);
+        Matrix<float, Dynamic, Dynamic> mat;
+        particleSystem.buildMassMatrix(mat);
 
-        Vector<float, Dynamic> pos(10);
-        for(int i = 0; i < pos.size(); i++){
-            pos(i) = 69.0;
-        }
-        Vector<float, Dynamic> vel(20);
-        for(int i = 0; i < vel.size(); i++){
-            vel(i) = 420.0;
-        }
-        Vector<float, Dynamic> force(30);
-        for(int i = 0; i < force.size(); i++){
-            force(i) = 666.0;
-        }
 
-        ASSERT_EQ(pos.size(), 10);
-        ASSERT_EQ(vel.size(), 20);
-        ASSERT_EQ(force.size(), 30);
+        ASSERT_EQ(mat(0,0), particleSystem.getParticles().at(0).m);
+        ASSERT_EQ(mat(1,1), particleSystem.getParticles().at(0).m);
 
-        particleSystem.pack(pos, vel, force);
+        ASSERT_EQ(mat(2,2), particleSystem.getParticles().at(1).m);
+        ASSERT_EQ(mat(3,3), particleSystem.getParticles().at(1).m);
 
-        //assert size
-        ASSERT_EQ(pos.size(), 6);
-        ASSERT_EQ(vel.size(), 6);
-        ASSERT_EQ(force.size(), 6);
+        ASSERT_EQ(mat(4,4), particleSystem.getParticles().at(2).m);
+        ASSERT_EQ(mat(5,5), particleSystem.getParticles().at(2).m);
 
-        ASSERT_EQ(pos(0), 1);
-        ASSERT_EQ(pos(1), 11);
-        ASSERT_EQ(pos(2), 4);
-        ASSERT_EQ(pos(3), 44);
-        ASSERT_EQ(pos(4), 0);
-        ASSERT_EQ(pos(5), 0);
-
-        ASSERT_EQ(vel(0), 2);
-        ASSERT_EQ(vel(1), 22);
-        ASSERT_EQ(vel(2), 5);
-        ASSERT_EQ(vel(3), 55);
-        ASSERT_EQ(vel(4), 0);
-        ASSERT_EQ(vel(5), 0);
-
-        ASSERT_EQ(force(0), 3);
-        ASSERT_EQ(force(1), 33);
-        ASSERT_EQ(force(2), 6);
-        ASSERT_EQ(force(3), 66);
-        ASSERT_EQ(force(4), 0);
-        ASSERT_EQ(force(5), 0);
     }
 }
 

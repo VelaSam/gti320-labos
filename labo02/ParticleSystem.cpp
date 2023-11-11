@@ -1,5 +1,6 @@
 #include "ParticleSystem.h"
 
+
 #define GRAVITY_A (-1*9.81)
 
 using namespace gti320;
@@ -84,34 +85,59 @@ void ParticleSystem::pack(
     }
 }
 
+
+void printParticleSystem(const ParticleSystem& particleSystem){
+
+    std::cout << "Particle System: " << std::endl;
+    int i = 0;
+    for(const Particle& particle : particleSystem.getParticles()){
+        std::cout << "Particle number: " << i << ", " << "mass: " << particle.m << " " << std::endl;
+        std::cout << "posit = [" << particle.x.data()[0] << ", " << particle.x.data()[1] << "]" << std::endl;
+        std::cout << "veloc = [" << particle.v.data()[0] << ", " << particle.v.data()[1] << "]" << std::endl;
+        std::cout << "force = [" << particle.f.data()[0] << ", " << particle.f.data()[1] << "]" << std::endl;
+        i++;
+    }
+    std::cout << std::endl;
+}
+
+void printVector(const Vector<float, Dynamic> vec, std::string name){
+    std::cout << name << std::endl;
+    for (int i = 0; i < vec.size()/2; i+=2) {
+        std::cout << ": " << vec(i) << " " << vec(i+1) << " ";
+        std::cout << std::endl;
+
+    }
+    std::cout << std::endl;
+}
 /**
- * Copie les données des vecteurs d'états dans le particules du système.
+ * Copie les données des vecteurs d'états dans les particules du système.
  */
 void ParticleSystem::unpack(
         const Vector<float, Dynamic>& _pos,
         const Vector<float, Dynamic>& _vel)
 {
-    // TODO 
+    // TODO
     //
     // Mise à jour des propriétés de chacune des particules à partir des valeurs
     // contenues dans le vecteur d'état.
     //
 
     // a re-verifier
-    for(int i = 0; i < this->m_particles.size()/2; i+=2){
+    this->m_particles.resize(_pos.size()/2);
 
-        m_particles[i].x(0) = _pos(i);
-        m_particles[i].x(1) =  _pos(i + 1);
+    int index = 0;
+    for(int i = 0 ; i < this->m_particles.size(); i++) {
+        this->m_particles.at(i).x(0) = _pos(index);
+        this->m_particles.at(i).x(1) = _pos(index+1);
 
-        m_particles[i].v(0) = _vel(i);
-        m_particles[i].v(1) = _vel(i + 1);
+        this->m_particles.at(i).v(0) = _pos(index);
+        this->m_particles.at(i).v(1) = _pos(index+1);
+        index+=2;
     }
 }
 
-
-
 /**
- * Construction de la matirce de masses.
+ * Construction de la matrice de masses.
  */
 void ParticleSystem::buildMassMatrix(Matrix<float, Dynamic, Dynamic>& M)
 {
@@ -121,11 +147,14 @@ void ParticleSystem::buildMassMatrix(Matrix<float, Dynamic, Dynamic>& M)
     M.setZero();
 
     // TODO 
-    //
     // Inscrire la masse de chacune des particules dans la matrice de masses M
-    //
-    for (int i = 0; i < numParticles; ++i)
+    int index = 0;
+    for (int i = 0; i < m_particles.size(); i++)
     {
+        M(index, index) = this->m_particles.at(i).m;
+        M(index+1, index+1) = this->m_particles.at(i).m;
+
+        index+=2;
     }
 }
 
