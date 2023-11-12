@@ -11,7 +11,6 @@ void GraphColoring::color(ParticleSystem& particleSystem)
 {
     // La palette de couleurs
     ColorList C;
-
     std::vector<Particle>& particles = particleSystem.getParticles();
 
     // Initialiser toutes les particules avec color = -1 
@@ -26,6 +25,18 @@ void GraphColoring::color(ParticleSystem& particleSystem)
     // TODO Construire les partitions qui correspond à chaque couleur. 
     //     Les partitions sont représentées par un tableau d'indices de particules, un pour chaque couleur. 
     //     Stocker les partitions dans m_partitions.
+    for(Particle &p : particles){
+        p.color = findColor(p, particles, particleSystem.getSprings(), C);
+    }
+
+    m_partitions.clear();
+    for (const Particle& p : particles)
+    {
+        if (p.color >= static_cast<int>(m_partitions.size()))
+        {
+            m_partitions.resize(p.color + 1);
+        }
+    }
 }
 
 /**
@@ -36,8 +47,29 @@ int GraphColoring::findColor(const Particle& p, const std::vector<Particle>& par
     // TODO Trouver la première couleur de la palette C qui n'est pas attribuée à une particule voisine. 
     //      Si une couleur est introuvable, ajouter une nouvelle couleur à la palette et retournez la couleur. 
     //      Utiliser la fonction findNeighbors pour assembler une liste de particules qui sont directement connectées à la particule p par un ressort (les voisines).
+    int n = C.size();
+    NeighborList neighbors = findNeighbors(p, particles, springs);
 
-    return -1;
+    std::vector<int> count(n, 0);
+
+    for (const Particle* neighbor : neighbors)
+    {
+        if (neighbor->color != -1)
+        {
+            count[neighbor->color]++;
+        }
+    }
+
+    for (int c = 0; c < n; ++c)
+    {
+        if (count[c] == 0)
+        {
+            return c;
+        }
+    }
+
+    C.push_back(n);
+    return n;
 }
 
 /**
