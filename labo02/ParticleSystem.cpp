@@ -16,10 +16,9 @@ void ParticleSystem::computeForces()
     // TODO 
     //
     // Calcul de la force gravitationnelle sur chacune des particules
-
-
     for (Particle& p : m_particles)
     {
+        p.f(0) = 0; // bruh jai oublier
         p.f(1) = (float)(p.m * GRAVITY_A);
     }
 
@@ -32,9 +31,9 @@ void ParticleSystem::computeForces()
     // magnitude mais dans des directions opposées.
     for (const Spring& s : m_springs)
     {
-        auto particule0 = this->m_particles[s.index0];
-        auto particule1 = this->m_particles[s.index1];
-        auto variationPosition = particule1.x - particule0.x;
+        auto particule0 = &this->m_particles[s.index0];
+        auto particule1 = &this->m_particles[s.index1];
+        auto variationPosition = particule1->x - particule0->x;
 
         auto alpha0 = s.k * (1 - s.l0/variationPosition.norm());
         auto alpha1 = -1* s.k * (1 - s.l0/variationPosition.norm());
@@ -42,8 +41,9 @@ void ParticleSystem::computeForces()
         auto f0 = alpha0*variationPosition;
         auto f1 = alpha1*variationPosition;
 
-        particule0.f = f0 + particule0.f;
-        particule1.f = f1 + particule1.f;
+
+        particule0->f = f0 + particule0->f;
+        particule1->f = f1 + particule1->f;
     }
 }
 
@@ -126,12 +126,12 @@ void ParticleSystem::unpack(
     this->m_particles.resize(_pos.size()/2);
 
     int index = 0;
-    for(int i = 0 ; i < this->m_particles.size(); i++) {
-        this->m_particles.at(i).x(0) = _pos(index);
-        this->m_particles.at(i).x(1) = _pos(index+1);
+    for(auto & m_particle : this->m_particles) {
+        m_particle.x(0) = _pos(index);
+        m_particle.x(1) = _pos(index+1);
 
-        this->m_particles.at(i).v(0) = _pos(index);
-        this->m_particles.at(i).v(1) = _pos(index+1);
+        m_particle.v(0) = _vel(index);
+        m_particle.v(1) = _vel(index+1);
         index+=2;
     }
 }
@@ -141,21 +141,23 @@ void ParticleSystem::unpack(
  */
 void ParticleSystem::buildMassMatrix(Matrix<float, Dynamic, Dynamic>& M)
 {
-    const int numParticles = m_particles.size();
+    const int numParticles = (int)m_particles.size();
     const int dim = 2 * numParticles;
     M.resize(dim, dim);
     M.setZero();
 
-    // TODO 
+    // TODO
     // Inscrire la masse de chacune des particules dans la matrice de masses M
     int index = 0;
     for (int i = 0; i < m_particles.size(); i++)
     {
-        M(index, index) = this->m_particles.at(i).m;
-        M(index+1, index+1) = this->m_particles.at(i).m;
+        float mass = this->m_particles.at(i).fixed ? std::numeric_limits<float>::max() : this->m_particles.at(i).m;
+        M(index, index) = mass;
+        M(index+1, index+1) = mass;
 
         index+=2;
     }
+
 }
 
 
@@ -164,23 +166,54 @@ void ParticleSystem::buildMassMatrix(Matrix<float, Dynamic, Dynamic>& M)
  */
 void ParticleSystem::buildDfDx(Matrix<float, Dynamic, Dynamic>& dfdx)
 {
-    const int numParticles = m_particles.size();
-    const int numSprings = m_springs.size();
-    const int dim = 2 * numParticles;
-    dfdx.resize(dim, dim);
-    dfdx.setZero();
-
-    // Pour chaque ressort...
-    for (const Spring& spring : m_springs)
-    {
-        // TODO
-        //
-        // Calculer le coefficients alpha et le produit dyadique tel que décrit au cours.
-        // Utiliser les indices spring.index0 et spring.index1 pour calculer les coordonnées des endroits affectés.
-        //
-        // Astuce: créer une matrice de taille fixe 2 par 2 puis utiliser la classe SubMatrix pour accumuler 
-        // les modifications sur la diagonale (2 endroits) et pour mettre à jour les blocs non diagonale (2 endroits).
-
-
-    }
+//    const int numParticles = m_particles.size();
+//    const int numSprings = m_springs.size();
+//    const int dim = 2 * numParticles;
+//    dfdx.resize(dim, dim);
+//    dfdx.setZero();
+//
+//    std::cout << "ROWS: " << dfdx.rows() <<std::endl;
+//    std::cout << "COLS: " << dfdx.cols() <<std::endl;
+//
+//    for(int i = 0; i < dfdx.rows(); i++){
+//        for (int j = 0; j < dfdx.cols(); ++j) {
+//            std::cout << dfdx(i,j) << " ";
+//        }
+//        std::cout << std::endl;
+//    }
+//    std::cout << std::endl;
+//    std::cout << std::endl;
+//    std::cout << std::endl;
+//
+//
+//    // Pour chaque ressort...
+//    for (const Spring& spring : m_springs)
+//    {
+////        int multiplier = 1; //or -1
+////
+////        // TODO
+////        // Calculer le coefficients alpha et le produit dyadique tel que décrit au cours.
+////        // Utiliser les indices spring.index0 et spring.index1 pour calculer les coordonnées des endroits affectés.
+////        //
+////        // Astuce: créer une matrice de taille fixe 2 par 2 puis utiliser la classe SubMatrix pour accumuler
+////        // les modifications sur la diagonale (2 endroits) et pour mettre à jour les blocs non diagonale (2 endroits).
+////
+////        auto particule0 = this->m_particles[spring.index0];
+////        auto particule1 = this->m_particles[spring.index1];
+////        auto variationPosition = particule1.x - particule0.x;
+////
+////        auto alpha0 = spring.k * (1 - spring.l0/variationPosition.norm());
+////        auto alpha1 = -1* spring.k * (1 - spring.l0/variationPosition.norm());
+////
+////
+////        Matrix<float,  2, 2> matriceAlpha;
+////        matriceAlpha.setZero();
+////
+////        matriceAlpha(0,0) = alpha0;
+////        matriceAlpha(1,1) = alpha1;
+//
+//
+//
+//
+//    }
 }

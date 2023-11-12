@@ -225,9 +225,9 @@ namespace
 
         // TODO Amusez-vous. Rendu ici, vous le méritez.
 
-        const int N = 20;
-        int x_start = 100;
-        const int dx = 12;
+        const int N = 10;
+        const int x_start = 50;
+        const int dx = 15;
 
         int index = 0;
         for (int j = 0; j < N; ++j)
@@ -236,7 +236,8 @@ namespace
             const int y = 480;
 
             Particle particle(Vector2f(x, y), Vector2f(0, 0), Vector2f(0, 0), 1.0);
-            particle.fixed = (index == 0) || (index == N - 1);
+            particle.fixed = true;
+
             particleSystem.addParticle(particle);
             if (j > 0)
             {
@@ -246,24 +247,6 @@ namespace
             ++index;
         }
 
-        x_start = 500;
-
-        index = 0;
-        for (int j = 0; j < N; ++j)
-        {
-            const int x = x_start + j * dx;
-            const int y = 480;
-
-            Particle particle(Vector2f(x, y), Vector2f(0, 0), Vector2f(0, 0), 1.0);
-            particle.fixed = (index == 0) || (index == N - 1);
-            particleSystem.addParticle(particle);
-            if (j > 0)
-            {
-                Spring s(index - 1, index, k, (float)dx);
-                particleSystem.addSpring(s);
-            }
-            ++index;
-        }
 
     }
 
@@ -273,11 +256,12 @@ namespace
 }
 
 ParticleSimApplication::ParticleSimApplication() : nanogui::Screen(nanogui::Vector2i(1280, 720), "GTI320 Labo 02 : Physique lineaire", true, false, true, true, false, 4, 1)
-, m_particleSystem(), m_stepping(false), m_stiffness(1000.0f), m_maxIter(10), m_solverType(GaussSeidel), m_fpsCounter(0), m_fpsTime(0.0)
+, m_particleSystem(), m_stepping(false), m_stiffness(1000.0f), m_maxIter(10), m_solverType(None), m_fpsCounter(0), m_fpsTime(0.0)
 {
     initGui();
 
-    createBeam(m_particleSystem, m_stiffness); // le modèle "poutre" est sélectionné à l'initialisation
+    createVotreExemple(m_particleSystem, m_stiffness);
+//    createBeam(m_particleSystem, m_stiffness); // le modèle "poutre" est sélectionné à l'initialisation
     m_particleSystem.pack(m_p0, m_v0, m_f0);
 
     perform_layout();
@@ -441,13 +425,6 @@ void ParticleSimApplication::initGui()
             reset();
         });
 
-    nanogui::Button* loadVotreExemple = new nanogui::Button(panelExamples, "Le vôtre");
-    loadVotreExemple->set_callback([this]
-        {
-            createVotreExemple(m_particleSystem, m_stiffness);
-            m_particleSystem.pack(m_p0, m_v0, m_f0);
-            reset();
-        });
 }
 
 
@@ -573,6 +550,7 @@ void ParticleSimApplication::step(float dt)
     //
     Vector<float, Dynamic> v_plus;
     Vector<float, Dynamic> acc; // vecteur d'accélérations
+
     switch (m_solverType)
     {
     case GaussSeidel:
@@ -591,7 +569,9 @@ void ParticleSimApplication::step(float dt)
         acc.resize(m_M.rows()); // vecteur d'accélérations
         for (int i = 0; i < m_M.rows(); ++i)
             acc(i) = (1.0 / m_M(i, i)) * m_f(i);
+
         v_plus = m_v + dt * acc;
+
         break;
     }
 
@@ -601,6 +581,7 @@ void ParticleSimApplication::step(float dt)
     // implicite. Les nouvelles position sont calculées à partir des position
     // actuelles m_x et des nouvelles vitesses v_plus. Les nouvelles positions
     // sont stockées directement dans le vecteur m_x.
+    m_x = m_x + dt * v_plus;
 
 
     // Affecte les valeurs calculées dans le vecteurs d'états aux particules du

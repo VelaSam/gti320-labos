@@ -27,9 +27,9 @@ int main(int argc, char** argv)
 //  ::testing::GTEST_FLAG(filter) = "TestLabo1a.*ElementAccess";
 //  ::testing::GTEST_FLAG(filter) = "TestLabo1a.*";
 //  ::testing::GTEST_FLAG(filter) = "TestLabo1b.*";
-//  ::testing::GTEST_FLAG(filter) = "TestSupLabo1a.*";
+//  ::testing::GTEST_FLAG(filter) = "TestSupLabo1a.A*";
 //  ::testing::GTEST_FLAG(filter) = "TestSupLabo1b.*";
-  ::testing::GTEST_FLAG(filter) = "TestLabo2a.*";
+//  ::testing::GTEST_FLAG(filter) = "TestLabo2a.*";
 
 
   const int ret = RUN_ALL_TESTS();
