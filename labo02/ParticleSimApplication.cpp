@@ -217,41 +217,90 @@ namespace
 
 
     /**
-     * TODO Créez votre propre exemple
-     */
-    static inline void createVotreExemple(ParticleSystem& particleSystem, float k)
-    {
+ * TODO Créez votre propre exemple
+ */
+    static inline void createVotreExemple(ParticleSystem &particleSystem, float k) {
         particleSystem.clear();
+        float pipi = 3.14159f;
+        Particle *top1;
+        Particle *top2;
 
-        // TODO Amusez-vous. Rendu ici, vous le méritez.
+        int numParticles = 20;
+        float radius = 50.0f;
 
-        const int N = 10;
-        const int x_start = 50;
-        const int dx = 15;
+        // 1rd circle (left)
+        for (int i = 0; i < numParticles; ++i) {
+            float angle = 2.0f * pipi * i / numParticles;
+            float x = 120.0f + radius * cos(angle);
+            float y = 100.0f + radius * sin(angle);
 
-        int index = 0;
-        for (int j = 0; j < N; ++j)
-        {
-            const int x = x_start + j * dx;
-            const int y = 480;
-
-            Particle particle(Vector2f(x, y), Vector2f(0, 0), Vector2f(0, 0), 1.0);
+            Particle particle(Vector2f(x, y), Vector2f(0, 0), Vector2f(0, 0), 1);
             particle.fixed = true;
-
             particleSystem.addParticle(particle);
-            if (j > 0)
-            {
-                Spring s(index - 1, index, k, (float)dx);
-                particleSystem.addSpring(s);
-            }
-            ++index;
         }
 
+        // connect particles between 1nd circle
+        for (int i = 0; i < numParticles; ++i) {
+            int nextIndex = (i + 1) % numParticles;
 
+            Spring spring(i, nextIndex, k, 2 * radius);
+            particleSystem.addSpring(spring);
+        }
+
+        // 2st circle (right)
+        for (int i = 0; i < numParticles; ++i) {
+            float angle = 2.0f * pipi * i / numParticles;
+            float x = 800.0f + radius * cos(angle);
+            float y = 100.0f + radius * sin(angle);
+
+            Particle particle(Vector2f(x, y), Vector2f(0, 0), Vector2f(0, 0), 1);
+            particle.fixed = true;
+            particleSystem.addParticle(particle);
+        }
+
+        // Connect particles of the 2st circle
+        for (int i = 0; i < numParticles; ++i) {
+            int nextIndex = (i + 1) % numParticles;
+
+            Spring spring(i + numParticles, nextIndex + numParticles, k, 2 * radius);
+            particleSystem.addSpring(spring);
+        }
+
+        // 3st circle
+        float x_top = (120.0f + 800.0f) / 2.0f;
+        float y_top = 500.0f;
+
+        for (int i = 0; i < numParticles; ++i) {
+            float angle = 2.0f * pipi * i / numParticles;
+            float x = x_top + radius * cos(angle);
+            float y = y_top + radius * sin(angle);
+
+            Particle particle(Vector2f(x, y), Vector2f(0, 0), Vector2f(0, 0), 10000);
+            particle.fixed = false;
+            particleSystem.addParticle(particle);
+        }
+
+        // Connect particles of the 3nd circle
+        for (int i = 0; i < numParticles; ++i) {
+            int nextIndex = (i + 1) % numParticles;
+
+            Spring spring(i + 2 * numParticles, nextIndex + 2 * numParticles, k, 1);
+            particleSystem.addSpring(spring);
+        }
+
+        // connect 1rd and 3st circles
+        for (int i = 0; i < numParticles; ++i) {
+            Spring spring(i, i + 2 * numParticles, k, 1);
+            particleSystem.addSpring(spring);
+        }
+
+        // connect 2st and 3nd circle
+        for (int i = 0; i < numParticles; ++i) {
+            int nextIndex = (i + 1) % numParticles;
+            Spring spring(i + numParticles, nextIndex + 2 * numParticles, k, 1);
+            particleSystem.addSpring(spring);
+        }
     }
-
-
-
 
 }
 
