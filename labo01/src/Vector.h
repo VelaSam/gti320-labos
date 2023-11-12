@@ -57,7 +57,9 @@ namespace gti320 {
 		Vector& operator=(const Vector& other)
 		{
 			// TODO implémenter
-			assert(other.size() == this->size() && other.size() > 0);
+
+            this->resize(other.size());
+
 			for (int i = 0; i < this->size(); i++) {
 				(*this)(i) = other(i);
 			}

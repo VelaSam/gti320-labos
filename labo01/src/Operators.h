@@ -58,8 +58,8 @@ namespace gti320 {
 		Matrix<_Scalar, Dynamic, Dynamic> C(A.rows(), B.cols());
 
 		int iterations = A.cols(); // could also be B.rows()
-		for (int j = 0; j < C.cols(); j++) {
-			for (int i = 0; i < C.rows(); i++) {
+        for (int i = 0; i < C.rows(); i++) {
+		    for (int j = 0; j < C.cols(); j++) {
 				_Scalar sumRowCol = 0;
 				for (int k = 0; k < iterations; k++) {
 					sumRowCol += A(i, k) * B(k, j);
@@ -281,7 +281,7 @@ namespace gti320 {
 
 		// TODO : implémenter
 		assert(A.cols() == v.rows());
-		Vector<_Scalar, _Rows> multipliedVector(v.rows());
+		Vector<_Scalar, _Rows> multipliedVector(A.rows());
 
 		for (int i = 0; i < v.rows(); i++) {
 			_Scalar indexValue = 0;
@@ -305,7 +305,7 @@ namespace gti320 {
 	{
 		// TODO : implémenter
 		assert(A.cols() == v.rows());
-		Vector<_Scalar, _Rows> multipliedVector(v.rows());
+		Vector<_Scalar, _Rows> multipliedVector(A.rows());
 		multipliedVector.setZero();
 		for (int j = 0; j < A.cols(); j++) {
 			for (int i = 0; i < multipliedVector.rows(); i++) {
