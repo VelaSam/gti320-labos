@@ -18,7 +18,7 @@ void ParticleSystem::computeForces()
     // Calcul de la force gravitationnelle sur chacune des particules
     for (Particle& p : m_particles)
     {
-        p.f(0) = 0; // bruh jai oublier
+        p.f(0) = 0; //jai oublier
         p.f(1) = (float)(p.m * GRAVITY_A);
     }
 
@@ -86,29 +86,6 @@ void ParticleSystem::pack(
 }
 
 
-void printParticleSystem(const ParticleSystem& particleSystem){
-
-    std::cout << "Particle System: " << std::endl;
-    int i = 0;
-    for(const Particle& particle : particleSystem.getParticles()){
-        std::cout << "Particle number: " << i << ", " << "mass: " << particle.m << " " << std::endl;
-        std::cout << "posit = [" << particle.x.data()[0] << ", " << particle.x.data()[1] << "]" << std::endl;
-        std::cout << "veloc = [" << particle.v.data()[0] << ", " << particle.v.data()[1] << "]" << std::endl;
-        std::cout << "force = [" << particle.f.data()[0] << ", " << particle.f.data()[1] << "]" << std::endl;
-        i++;
-    }
-    std::cout << std::endl;
-}
-
-void printVector(const Vector<float, Dynamic> vec, std::string name){
-    std::cout << name << std::endl;
-    for (int i = 0; i < vec.size()/2; i+=2) {
-        std::cout << ": " << vec(i) << " " << vec(i+1) << " ";
-        std::cout << std::endl;
-
-    }
-    std::cout << std::endl;
-}
 /**
  * Copie les données des vecteurs d'états dans les particules du système.
  */
@@ -182,7 +159,6 @@ void ParticleSystem::buildDfDx(Matrix<float, Dynamic, Dynamic>& dfdx)
 //        //
 //        // Astuce: créer une matrice de taille fixe 2 par 2 puis utiliser la classe SubMatrix pour accumuler
 //        // les modifications sur la diagonale (2 endroits) et pour mettre à jour les blocs non diagonale (2 endroits).
-//
 
         int idx0 = spring.index0;
         int idx1 = spring.index1;
@@ -200,10 +176,10 @@ void ParticleSystem::buildDfDx(Matrix<float, Dynamic, Dynamic>& dfdx)
 
         Matrix<float> dyadiqueCoeff = -1 * spring.k * (spring.l0 / norm) * ((1.0f / normSq)) * mDiadique;
 
-        Matrix<float> diagoAlpha(2, 2);
 
         float alpha = spring.k * (1- spring.l0 / posDiff.norm());
 
+        Matrix<float> diagoAlpha(2, 2);
         diagoAlpha(0, 0) = -alpha + dyadiqueCoeff(0, 0);
         diagoAlpha(0, 1) = dyadiqueCoeff(0, 1);
         diagoAlpha(1, 0) = dyadiqueCoeff(1, 0);
@@ -214,6 +190,7 @@ void ParticleSystem::buildDfDx(Matrix<float, Dynamic, Dynamic>& dfdx)
         auto dfdxBlockJI = dfdx.block(idx1, idx0, 2, 2);
         auto dfdxBlockII = dfdx.block(idx0, idx0, 2, 2);
         auto dfdxBlockJJ = dfdx.block(idx1, idx1, 2, 2);
+
 
         dfdxBlockIJ(0,0) += diagoAlpha(0, 0);
         dfdxBlockIJ(0,1) += diagoAlpha(0, 1);
@@ -235,17 +212,23 @@ void ParticleSystem::buildDfDx(Matrix<float, Dynamic, Dynamic>& dfdx)
         dfdxBlockJJ(0,1) += -1.0f * diagoAlpha(0, 1);
         dfdxBlockJJ(1,0) += -1.0f * diagoAlpha(1, 0);
         dfdxBlockJJ(1,1) += -1.0f * diagoAlpha(1, 1);
-
-
-        //dont uncomment
-//        for (int i = 0; i < dfdx.rows(); ++i) {
-//            for (int j = 0; j < dfdx.cols(); ++j) {
-//                std::cout << dfdx(i,j) << " ";
-//            }
-//            std::cout << std::endl;
-//        }
-//        std::cout << std::endl;
-//        std::cout << std::endl;
-
     }
+
 }
+
+
+//effectue une visualisation des valeurs des particules dans particleSystem
+void printParticleSystem(const ParticleSystem& particleSystem){
+
+    std::cout << "Particle System: " << std::endl;
+    int i = 0;
+    for(const Particle& particle : particleSystem.getParticles()){
+        std::cout << "Particle number: " << i << ", " << "mass: " << particle.m << " " << std::endl;
+        std::cout << "posit = [" << particle.x.data()[0] << ", " << particle.x.data()[1] << "]" << std::endl;
+        std::cout << "veloc = [" << particle.v.data()[0] << ", " << particle.v.data()[1] << "]" << std::endl;
+        std::cout << "force = [" << particle.f.data()[0] << ", " << particle.f.data()[1] << "]" << std::endl;
+        i++;
+    }
+    std::cout << std::endl;
+}
+

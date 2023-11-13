@@ -600,13 +600,12 @@ void ParticleSimApplication::step(float dt)
     // Bilan : Version 1 utilise 2 constructeurs et 1 opérateur de copie
     //         Version 2 utilise un seul constructeur et aucune copie
     //////////////////////////////////////////////////////////////////////////////////
-    
-    const Matrix<float, Dynamic, Dynamic> A;
-    const Vector<float, Dynamic> b;
+    const Matrix<float, Dynamic, Dynamic> A = m_M - (dt*dt*m_dfdx);
+    const Vector<float, Dynamic> b = (dt*m_f)+m_v;
 
     // Résolution du système d'équations  `A*v_plus = b`.
     //
-    Vector<float, Dynamic> v_plus;
+    Vector<float, Dynamic> v_plus = m_v;
     Vector<float, Dynamic> acc; // vecteur d'accélérations
 
     switch (m_solverType)

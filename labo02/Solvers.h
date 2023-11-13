@@ -18,6 +18,8 @@
 
 namespace gti320
 {
+
+
     // Identification des solveurs
     enum eSolverType { None, GaussSeidel, ColorGaussSeidel, Cholesky };
 
@@ -35,19 +37,58 @@ namespace gti320
         // TODO 
         //
         // Implémenter la méthode de Gauss-Seidel
+        Vector<float, Dynamic> r = A*x - b;
+
+        bool converged = false;
+        int k = 0;
+
+        while(!converged) {
+            auto x_prec = x;
+            for (int i = 0; i < x.size(); ++i) {
+                x(i) = b(i);
+                for (int j = 0; j < i; ++j) {
+                    x(i) -=  A(i, j) * x(j);
+                }
+                for (int j = i + 1; j < x.size(); ++j) {
+                    x(i) -= A(i, j) * x(j);
+                }
+                x(i) /= A(i, i);
+            }
+            r = A * x - b;
+            k++;
+            if(k == k_max || (x-x_prec).norm()/x.norm() < tau || r.norm()/b.norm() < eps){
+                converged = true;
+            }
+        }
+
     }
 
     /**
      * Résout Ax = b avec la méthode Gauss-Seidel parallélisée (coloration de graphe)
-     */
+     */\
     static void gaussSeidelColor(const Matrix<float, Dynamic, Dynamic>& A, const Vector<float, Dynamic>& b, Vector<float, Dynamic>& x, const Partitions& P, const int maxIter)
     {
-        // TODO 
-        //
-        // Implémenter la méthode de Gauss-Seidel avec coloration de graphe.
-        // Les partitions avec l'index de chaque particule sont stockées dans la table des tables, P.
+        for (int c = 0; c < 4; ++c) {
 
+            #pragma omp parallel for
+            for (int k = 0; k < P[c].size(); ++k) {
+                int i = P[c][k];
+
+                float sum = b(i);
+
+                for (int j = 0; j < i; ++j) {
+                    sum -= A(i, j) * x(j);
+                }
+
+                for (int j = i + 1; j < A.cols(); ++j) {
+                    sum -= A(i, j) * x(j);
+                }
+
+                x(i) = sum / A(i, i);
+            }
+        }
     }
+
 
     /**
      * Résout Ax = b avec la méthode de Cholesky
@@ -79,4 +120,7 @@ namespace gti320
 
     }
 
+
 }
+
+
