@@ -305,12 +305,12 @@ namespace
 }
 
 ParticleSimApplication::ParticleSimApplication() : nanogui::Screen(nanogui::Vector2i(1280, 720), "GTI320 Labo 02 : Physique lineaire", true, false, true, true, false, 4, 1)
-, m_particleSystem(), m_stepping(false), m_stiffness(1000.0f), m_maxIter(10), m_solverType(None), m_fpsCounter(0), m_fpsTime(0.0)
+, m_particleSystem(), m_stepping(false), m_stiffness(1000.0f), m_maxIter(10), m_solverType(GaussSeidel), m_fpsCounter(0), m_fpsTime(0.0)
 {
     initGui();
 
     createVotreExemple(m_particleSystem, m_stiffness);
-//    createBeam(m_particleSystem, m_stiffness); // le modèle "poutre" est sélectionné à l'initialisation
+    createBeam(m_particleSystem, m_stiffness); // le modèle "poutre" est sélectionné à l'initialisation
     m_particleSystem.pack(m_p0, m_v0, m_f0);
 
     perform_layout();
@@ -473,6 +473,15 @@ void ParticleSimApplication::initGui()
             m_particleSystem.pack(m_p0, m_v0, m_f0);
             reset();
         });
+
+
+    nanogui::Button* loadVotreExemple = new nanogui::Button(panelExamples, "Slingshot Bizzare");
+    loadVotreExemple->set_callback([this]
+                                   {
+                                       createVotreExemple(m_particleSystem, m_stiffness);
+                                       m_particleSystem.pack(m_p0, m_v0, m_f0);
+                                       reset();
+                                   });
 
 }
 

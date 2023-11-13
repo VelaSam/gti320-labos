@@ -166,54 +166,86 @@ void ParticleSystem::buildMassMatrix(Matrix<float, Dynamic, Dynamic>& M)
  */
 void ParticleSystem::buildDfDx(Matrix<float, Dynamic, Dynamic>& dfdx)
 {
-//    const int numParticles = m_particles.size();
-//    const int numSprings = m_springs.size();
-//    const int dim = 2 * numParticles;
-//    dfdx.resize(dim, dim);
-//    dfdx.setZero();
+    const int numParticles = m_particles.size();
+    const int numSprings = m_springs.size();
+    const int dim = 2 * numParticles;
+    dfdx.resize(dim, dim);
+    dfdx.setZero();
+
+
+    // Pour chaque ressort...
+    for (const Spring& spring : m_springs)
+    {
+//        // TODO
+//        // Calculer le coefficients alpha et le produit dyadique tel que décrit au cours.
+//        // Utiliser les indices spring.idx0 et spring.index1 pour calculer les coordonnées des endroits affectés.
+//        //
+//        // Astuce: créer une matrice de taille fixe 2 par 2 puis utiliser la classe SubMatrix pour accumuler
+//        // les modifications sur la diagonale (2 endroits) et pour mettre à jour les blocs non diagonale (2 endroits).
 //
-//    std::cout << "ROWS: " << dfdx.rows() <<std::endl;
-//    std::cout << "COLS: " << dfdx.cols() <<std::endl;
-//
-//    for(int i = 0; i < dfdx.rows(); i++){
-//        for (int j = 0; j < dfdx.cols(); ++j) {
-//            std::cout << dfdx(i,j) << " ";
+
+        int idx0 = spring.index0;
+        int idx1 = spring.index1;
+
+        Vector<float, 2> posDiff = this->m_particles[idx1].x - this->m_particles[idx0].x;
+
+        Matrix<float> mDiadique(2,2);
+        mDiadique(0,0) = posDiff(0) * posDiff(0);
+        mDiadique(0,1) = posDiff(0) * posDiff(1);
+        mDiadique(1,0) = posDiff(1) * posDiff(0);
+        mDiadique(1,1) = posDiff(1) * posDiff(1);
+
+        float normSq = posDiff.norm() * posDiff.norm();
+        float norm = posDiff.norm();
+
+        Matrix<float> dyadiqueCoeff = -1 * spring.k * (spring.l0 / norm) * ((1.0f / normSq)) * mDiadique;
+
+        Matrix<float> diagoAlpha(2, 2);
+
+        float alpha = spring.k * (1- spring.l0 / posDiff.norm());
+
+        diagoAlpha(0, 0) = -alpha + dyadiqueCoeff(0, 0);
+        diagoAlpha(0, 1) = dyadiqueCoeff(0, 1);
+        diagoAlpha(1, 0) = dyadiqueCoeff(1, 0);
+        diagoAlpha(1, 1) = -alpha + dyadiqueCoeff(1, 1);
+
+        //probleme de conversion entreSubMatrix et Matrix (???) donc jabuse des block et des auto
+        auto dfdxBlockIJ = dfdx.block(idx0, idx1, 2, 2);
+        auto dfdxBlockJI = dfdx.block(idx1, idx0, 2, 2);
+        auto dfdxBlockII = dfdx.block(idx0, idx0, 2, 2);
+        auto dfdxBlockJJ = dfdx.block(idx1, idx1, 2, 2);
+
+        dfdxBlockIJ(0,0) += diagoAlpha(0, 0);
+        dfdxBlockIJ(0,1) += diagoAlpha(0, 1);
+        dfdxBlockIJ(1,0) += diagoAlpha(1, 0);
+        dfdxBlockIJ(1,1) += diagoAlpha(1, 1);
+
+        dfdxBlockJI(0,0) += diagoAlpha(0, 0);
+        dfdxBlockJI(0,1) += diagoAlpha(0, 1);
+        dfdxBlockJI(1,0) += diagoAlpha(1, 0);
+        dfdxBlockJI(1,1) += diagoAlpha(1, 1);
+
+
+        dfdxBlockII(0,0) += -1.0f * diagoAlpha(0, 0);
+        dfdxBlockII(0,1) += -1.0f * diagoAlpha(0, 1);
+        dfdxBlockII(1,0) += -1.0f * diagoAlpha(1, 0);
+        dfdxBlockII(1,1) += -1.0f * diagoAlpha(1, 1);
+
+        dfdxBlockJJ(0,0) += -1.0f * diagoAlpha(0, 0);
+        dfdxBlockJJ(0,1) += -1.0f * diagoAlpha(0, 1);
+        dfdxBlockJJ(1,0) += -1.0f * diagoAlpha(1, 0);
+        dfdxBlockJJ(1,1) += -1.0f * diagoAlpha(1, 1);
+
+
+        //dont uncomment
+//        for (int i = 0; i < dfdx.rows(); ++i) {
+//            for (int j = 0; j < dfdx.cols(); ++j) {
+//                std::cout << dfdx(i,j) << " ";
+//            }
+//            std::cout << std::endl;
 //        }
 //        std::cout << std::endl;
-//    }
-//    std::cout << std::endl;
-//    std::cout << std::endl;
-//    std::cout << std::endl;
-//
-//
-//    // Pour chaque ressort...
-//    for (const Spring& spring : m_springs)
-//    {
-////        int multiplier = 1; //or -1
-////
-////        // TODO
-////        // Calculer le coefficients alpha et le produit dyadique tel que décrit au cours.
-////        // Utiliser les indices spring.index0 et spring.index1 pour calculer les coordonnées des endroits affectés.
-////        //
-////        // Astuce: créer une matrice de taille fixe 2 par 2 puis utiliser la classe SubMatrix pour accumuler
-////        // les modifications sur la diagonale (2 endroits) et pour mettre à jour les blocs non diagonale (2 endroits).
-////
-////        auto particule0 = this->m_particles[spring.index0];
-////        auto particule1 = this->m_particles[spring.index1];
-////        auto variationPosition = particule1.x - particule0.x;
-////
-////        auto alpha0 = spring.k * (1 - spring.l0/variationPosition.norm());
-////        auto alpha1 = -1* spring.k * (1 - spring.l0/variationPosition.norm());
-////
-////
-////        Matrix<float,  2, 2> matriceAlpha;
-////        matriceAlpha.setZero();
-////
-////        matriceAlpha(0,0) = alpha0;
-////        matriceAlpha(1,1) = alpha1;
-//
-//
-//
-//
-//    }
+//        std::cout << std::endl;
+
+    }
 }
