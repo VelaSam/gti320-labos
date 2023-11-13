@@ -98,8 +98,6 @@ void ParticleSystem::unpack(
     // Mise à jour des propriétés de chacune des particules à partir des valeurs
     // contenues dans le vecteur d'état.
     //
-
-    // a re-verifier
     this->m_particles.resize(_pos.size()/2);
 
     int index = 0;
@@ -185,8 +183,8 @@ void ParticleSystem::buildDfDx(Matrix<float, Dynamic, Dynamic>& dfdx)
         diagoAlpha(1, 0) = dyadiqueCoeff(1, 0);
         diagoAlpha(1, 1) = -alpha + dyadiqueCoeff(1, 1);
 
-        int i = idx0 /= 2;
-        int j = idx1 /= 2;
+        int i = idx0 /= 8;
+        int j = idx1 /= 8;
 
         //block i , j
         dfdx.block(i, j, 2, 2)(0,0) += diagoAlpha(0, 0);
@@ -203,16 +201,16 @@ void ParticleSystem::buildDfDx(Matrix<float, Dynamic, Dynamic>& dfdx)
 
 
         //block i, i
-        dfdx.block(i, i, 2, 2)(0,0) += 1.0f * diagoAlpha(0, 0);
-        dfdx.block(i, i, 2, 2)(0,1) += 1.0f * diagoAlpha(0, 1);
-        dfdx.block(i, i, 2, 2)(1,0) += 1.0f * diagoAlpha(1, 0);
-        dfdx.block(i, i, 2, 2)(1,1) += 1.0f * diagoAlpha(1, 1);
+        dfdx.block(i, i, 2, 2)(0,0) += diagoAlpha(0, 0);
+        dfdx.block(i, i, 2, 2)(0,1) += diagoAlpha(0, 1);
+        dfdx.block(i, i, 2, 2)(1,0) += diagoAlpha(1, 0);
+        dfdx.block(i, i, 2, 2)(1,1) += diagoAlpha(1, 1);
 
         //block j, j
-        dfdx.block(j, j, 2, 2)(0,0) += 1.0f * diagoAlpha(0, 0);
-        dfdx.block(j, j, 2, 2)(0,1) += 1.0f * diagoAlpha(0, 1);
-        dfdx.block(j, j, 2, 2)(1,0) += 1.0f * diagoAlpha(1, 0);
-        dfdx.block(j, j, 2, 2)(1,1) += 1.0f * diagoAlpha(1, 1);
+        dfdx.block(j, j, 2, 2)(0,0) += diagoAlpha(0, 0);
+        dfdx.block(j, j, 2, 2)(0,1) += diagoAlpha(0, 1);
+        dfdx.block(j, j, 2, 2)(1,0) += diagoAlpha(1, 0);
+        dfdx.block(j, j, 2, 2)(1,1) += diagoAlpha(1, 1);
     }
 
 }

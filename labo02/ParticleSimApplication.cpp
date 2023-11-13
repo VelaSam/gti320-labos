@@ -219,6 +219,7 @@ namespace
     /**
  * TODO Créez votre propre exemple
  */
+ //cree un systeme de particules qui fait 3 roues attachees en ligne pour simuler une sorte de slingshot
     static inline void createVotreExemple(ParticleSystem &particleSystem, float k) {
         particleSystem.clear();
         const float pee = 3.14159f;
