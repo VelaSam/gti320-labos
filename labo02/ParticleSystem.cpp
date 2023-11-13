@@ -149,7 +149,6 @@ void ParticleSystem::buildDfDx(Matrix<float, Dynamic, Dynamic>& dfdx)
     dfdx.resize(dim, dim);
     dfdx.setZero();
 
-
     // Pour chaque ressort...
     for (const Spring& spring : m_springs)
     {
@@ -163,55 +162,57 @@ void ParticleSystem::buildDfDx(Matrix<float, Dynamic, Dynamic>& dfdx)
         int idx0 = spring.index0;
         int idx1 = spring.index1;
 
-        Vector<float, 2> posDiff = this->m_particles[idx1].x - this->m_particles[idx0].x;
+        Vector2f posDiff = this->m_particles[idx1].x - this->m_particles[idx0].x;
 
-        Matrix<float> mDiadique(2,2);
-        mDiadique(0,0) = posDiff(0) * posDiff(0);
-        mDiadique(0,1) = posDiff(0) * posDiff(1);
-        mDiadique(1,0) = posDiff(1) * posDiff(0);
-        mDiadique(1,1) = posDiff(1) * posDiff(1);
+        Matrix<float> Mdiadique(2,2);
+        Mdiadique(0, 0) = posDiff(0) * posDiff(0);
+        Mdiadique(0, 1) = posDiff(0) * posDiff(1);
+        Mdiadique(1, 0) = posDiff(1) * posDiff(0);
+        Mdiadique(1, 1) = posDiff(1) * posDiff(1);
 
         float normSq = posDiff.norm() * posDiff.norm();
         float norm = posDiff.norm();
 
-        Matrix<float> dyadiqueCoeff = -1 * spring.k * (spring.l0 / norm) * ((1.0f / normSq)) * mDiadique;
+        Matrix<float> dyadiqueCoeff = -1 * spring.k * (spring.l0 / norm) * ((1.0f / normSq)) * Mdiadique;
 
 
         float alpha = spring.k * (1- spring.l0 / posDiff.norm());
 
-        Matrix<float> diagoAlpha(2, 2);
+        Matrix<float, Dynamic, Dynamic, ColumnStorage> diagoAlpha(2, 2);
+        diagoAlpha.setIdentity();
         diagoAlpha(0, 0) = -alpha + dyadiqueCoeff(0, 0);
         diagoAlpha(0, 1) = dyadiqueCoeff(0, 1);
         diagoAlpha(1, 0) = dyadiqueCoeff(1, 0);
         diagoAlpha(1, 1) = -alpha + dyadiqueCoeff(1, 1);
 
-        //probleme de conversion entreSubMatrix et Matrix (???) donc jabuse des block et des auto
-        auto dfdxBlockIJ = dfdx.block(idx0, idx1, 2, 2);
-        auto dfdxBlockJI = dfdx.block(idx1, idx0, 2, 2);
-        auto dfdxBlockII = dfdx.block(idx0, idx0, 2, 2);
-        auto dfdxBlockJJ = dfdx.block(idx1, idx1, 2, 2);
+        int i = idx0 /= 2;
+        int j = idx1 /= 2;
+
+        //block i , j
+        dfdx.block(i, j, 2, 2)(0,0) += diagoAlpha(0, 0);
+        dfdx.block(i, j, 2, 2)(0,1) += diagoAlpha(0, 1);
+        dfdx.block(i, j, 2, 2)(1,0) += diagoAlpha(1, 0);
+        dfdx.block(i, j, 2, 2)(1,1) += diagoAlpha(1, 1);
 
 
-        dfdxBlockIJ(0,0) += diagoAlpha(0, 0);
-        dfdxBlockIJ(0,1) += diagoAlpha(0, 1);
-        dfdxBlockIJ(1,0) += diagoAlpha(1, 0);
-        dfdxBlockIJ(1,1) += diagoAlpha(1, 1);
-
-        dfdxBlockJI(0,0) += diagoAlpha(0, 0);
-        dfdxBlockJI(0,1) += diagoAlpha(0, 1);
-        dfdxBlockJI(1,0) += diagoAlpha(1, 0);
-        dfdxBlockJI(1,1) += diagoAlpha(1, 1);
+        //block j , i
+        dfdx.block(j, i, 2, 2)(0,0) += diagoAlpha(0, 0);
+        dfdx.block(j, i, 2, 2)(0,1) += diagoAlpha(0, 1);
+        dfdx.block(j, i, 2, 2)(1,0) += diagoAlpha(1, 0);
+        dfdx.block(j, i, 2, 2)(1,1) += diagoAlpha(1, 1);
 
 
-        dfdxBlockII(0,0) += -1.0f * diagoAlpha(0, 0);
-        dfdxBlockII(0,1) += -1.0f * diagoAlpha(0, 1);
-        dfdxBlockII(1,0) += -1.0f * diagoAlpha(1, 0);
-        dfdxBlockII(1,1) += -1.0f * diagoAlpha(1, 1);
+        //block i, i
+        dfdx.block(i, i, 2, 2)(0,0) += 1.0f * diagoAlpha(0, 0);
+        dfdx.block(i, i, 2, 2)(0,1) += 1.0f * diagoAlpha(0, 1);
+        dfdx.block(i, i, 2, 2)(1,0) += 1.0f * diagoAlpha(1, 0);
+        dfdx.block(i, i, 2, 2)(1,1) += 1.0f * diagoAlpha(1, 1);
 
-        dfdxBlockJJ(0,0) += -1.0f * diagoAlpha(0, 0);
-        dfdxBlockJJ(0,1) += -1.0f * diagoAlpha(0, 1);
-        dfdxBlockJJ(1,0) += -1.0f * diagoAlpha(1, 0);
-        dfdxBlockJJ(1,1) += -1.0f * diagoAlpha(1, 1);
+        //block j, j
+        dfdx.block(j, j, 2, 2)(0,0) += 1.0f * diagoAlpha(0, 0);
+        dfdx.block(j, j, 2, 2)(0,1) += 1.0f * diagoAlpha(0, 1);
+        dfdx.block(j, j, 2, 2)(1,0) += 1.0f * diagoAlpha(1, 0);
+        dfdx.block(j, j, 2, 2)(1,1) += 1.0f * diagoAlpha(1, 1);
     }
 
 }

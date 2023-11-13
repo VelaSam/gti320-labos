@@ -221,7 +221,7 @@ namespace
  */
     static inline void createVotreExemple(ParticleSystem &particleSystem, float k) {
         particleSystem.clear();
-        float pipi = 3.14159f;
+        const float pee = 3.14159f;
         Particle *top1;
         Particle *top2;
 
@@ -230,7 +230,7 @@ namespace
 
         // 1rd circle (left)
         for (int i = 0; i < numParticles; ++i) {
-            float angle = 2.0f * pipi * i / numParticles;
+            float angle = 2.0f * pee * i / numParticles;
             float x = 120.0f + radius * cos(angle);
             float y = 100.0f + radius * sin(angle);
 
@@ -249,7 +249,7 @@ namespace
 
         // 2st circle (right)
         for (int i = 0; i < numParticles; ++i) {
-            float angle = 2.0f * pipi * i / numParticles;
+            float angle = 2.0f * pee * i / numParticles;
             float x = 800.0f + radius * cos(angle);
             float y = 100.0f + radius * sin(angle);
 
@@ -271,11 +271,11 @@ namespace
         float y_top = 500.0f;
 
         for (int i = 0; i < numParticles; ++i) {
-            float angle = 2.0f * pipi * i / numParticles;
+            float angle = 2.0f * pee * i / numParticles;
             float x = x_top + radius * cos(angle);
             float y = y_top + radius * sin(angle);
 
-            Particle particle(Vector2f(x, y), Vector2f(0, 0), Vector2f(0, 0), 10000);
+            Particle particle(Vector2f(x, y), Vector2f(0, 0), Vector2f(0, 0), 100);
             particle.fixed = false;
             particleSystem.addParticle(particle);
         }

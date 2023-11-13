@@ -21,6 +21,7 @@ using namespace gti320;
 
 namespace Lab2Tests {
 
+    //Imprime une matrice afin de la visualiser
     void printMatrix(Matrix<float, Dynamic, Dynamic> m){
         for (int i = 0; i < m.rows(); ++i) {
             for (int j = 0; j < m.cols(); ++j) {
@@ -29,7 +30,7 @@ namespace Lab2Tests {
             std::cout << std::endl;
         }
     }
-
+    //Imprime une particle system afin de la visualiser
     void printParticleSystem(const ParticleSystem& particleSystem){
 
         std::cout << "Particle System: " << std::endl;
@@ -44,7 +45,7 @@ namespace Lab2Tests {
         std::cout << std::endl;
     }
 
-
+    //Cree un systeme de particule de base afin de servir aux tests
     ParticleSystem &setUpTestSystem() {
 
         Vector2f x1(1, 11);
@@ -73,6 +74,7 @@ namespace Lab2Tests {
         return *particleSystem;
     }
 
+    //Test de la methode pack (valeures attendues)
     TEST(TestLabo2a, PackMethod){
 
         ParticleSystem particleSystem = setUpTestSystem();
@@ -125,6 +127,8 @@ namespace Lab2Tests {
         ASSERT_EQ(force(5), 0);
     }
 
+
+    //petit test non fonctionel sur la methode unpack
     TEST(TestLabo2a, UnpackMethod){
 
 //        Vector<float, Dynamic> pos(10);
@@ -170,6 +174,7 @@ namespace Lab2Tests {
 
     }
 
+    //test pour verifier fonctionnement de la methode qui build une matrice de masse
     TEST(TestLabo2a, BuildMassMatrix){
 
         auto particleSystem = setUpTestSystem();

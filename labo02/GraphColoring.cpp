@@ -32,7 +32,7 @@ void GraphColoring::color(ParticleSystem& particleSystem)
     m_partitions.clear();
     for (const Particle& p : particles)
     {
-        if (p.color >= static_cast<int>(m_partitions.size()))
+        if (p.color >= (int)(m_partitions.size()))
         {
             m_partitions.resize(p.color + 1);
         }
